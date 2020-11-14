@@ -254,12 +254,9 @@ EOL
 	read -e installtheme
 	if [ "$installtheme" == y ] ; then
 		cd wp-content/themes/
-		curl -O theme.zip https://codeload.github.com/PressMaximum/customify/zip/master
+		curl -o theme.zip https://codeload.github.com/PressMaximum/customify/zip/master
 		unzip theme.zip
-		mv theme/* ./
 		mv customify-master customify
-		#Tidy Up
-		rmdir theme
 		rm theme.zip
 		echo "[Success]: Theme is installed."
 	fi
