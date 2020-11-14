@@ -84,9 +84,9 @@ if [ "$run" == y ] ; then
 	#set WP salts
 	perl -i -pe'
 	  BEGIN {
-	    @chars = ("a" .. "z", "A" .. "Z", 0 .. 9);
-	    push @chars, split //, "!@#$%^&*()-_ []{}<>~\`+=,.;:/?|";
-	    sub salt { join "", map $chars[ rand @chars ], 1 .. 64 }
+		@chars = ("a" .. "z", "A" .. "Z", 0 .. 9);
+		push @chars, split //, "!@#$%^&*()-_ []{}<>~\`+=,.;:/?|";
+		sub salt { join "", map $chars[ rand @chars ], 1 .. 64 }
 	  }
 	  s/put your unique phrase here/salt()/ge
 	' wp-config.php
@@ -176,11 +176,11 @@ Options -Indexes
 ## END 6G Firewall
 ## BEGIN htauth basic authentication
 # STAGING
-Require all denied
-AuthType Basic
-AuthUserFile /etc/apache2/wp-login
-AuthName "Please Authenticate"
-Require valid-user
+# Require all denied
+# AuthType Basic
+# AuthUserFile /etc/apache2/wp-login
+# AuthName "Please Authenticate"
+# Require valid-user
 # LIVE - prevent wp-login brute force attacks from causing load
 #<FilesMatch "^(wp-login|xmlrpc)\.php$">
 #	AuthType Basic
@@ -234,31 +234,35 @@ allow from all
 </Files>
 EOL
 	fi
-    echo "Installing..."
-    # Run our install ...
-    curl -d "weblog_title=$wptitle&user_name=$wpuser&admin_passw-ord=$wppass&admin_password2=$wppass&admin_email=$wpemail" http://$siteurl/wp-admin/install.php?step=2
+	echo "Installing..."
+	# Run our install ...
+	curl -d "weblog_title=$wptitle&user_name=$wpuser&admin_password=$wppass&admin_password2=$wppass&admin_email=$wpemail" http://$siteurl/wp-admin/install.php?step=2
 	echo "Cleaning..."
 
 	# Tidy up
-    #remove wordpress/ dir
+	#remove wordpress/ dir
 	rmdir wordpress
 	#remove zip file
 	rm latest.tar.gz
 	#remove bash script if it exists in this dir
 	[[ -f "install-wordpress.sh" ]] && rm "install-wordpress.sh"
-    #remove config backup
-    rm wp-config.php.bak
+	#remove config backup
+	rm wp-config.php.bak
 
-    # Install Theme
-    echo "Do you need to install Customify theme? (y/n)"
-    read -e installtheme
-    if [ "$installtheme" == y ] ; then
-        cd wp-content/themes/
-        curl https://github.com/PressMaximum/customify/archive/master.zip
-        unzip master.zip
-        rm master.zip
-        echo "[Success]: Theme is installed."
-    fi
+	# Install Theme
+	echo "Do you need to install Customify theme? (y/n)"
+	read -e installtheme
+	if [ "$installtheme" == y ] ; then
+		cd wp-content/themes/
+		curl -O theme.zip https://codeload.github.com/PressMaximum/customify/zip/master
+		unzip theme.zip
+		mv theme/* ./
+		mv customify-master customify
+		#Tidy Up
+		rmdir theme
+		rm theme.zip
+		echo "[Success]: Theme is installed."
+	fi
 
 	echo "========================="
 	echo "[Success]: Installation is complete."
