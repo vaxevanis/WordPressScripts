@@ -259,6 +259,17 @@ EOL
 		mv customify-master customify
 		rm theme.zip
 		echo "[Success]: Theme is installed."
+		cd ../
+	fi
+
+	# Remove Default Themes
+	echo "Do you need to remove all default themes? (y/n)"
+	read -e removethemes
+	if [ "$removethemes" == y ] ; then
+		cd wp-content/themes/
+		rm -r twentynineteen twentyseventeen twentytwenty
+		echo "[Success]: Default themes  uninstalled."
+		cd ../
 	fi
 
 	echo "========================="
