@@ -52,8 +52,8 @@ if [ "$run" == y ] ; then
 		echo "Setting up the database."
 		echo "============================================"
 		#login to MySQL, add database, add user and grant permissions
-		dbsetup="CREATE DATABASE IF NOT EXISTS $dbname;GRANT ALL ON $dbname.* TO $dbuser@$mysqlhost IDENTIFIED BY '$dbpass';FLUSH PRIVILEGES;"
-		mysql -u $mysqluser -p$mysqlpass -e "$dbsetup"
+		dbsetup="CREATE DATABASE IF NOT EXISTS $dbname; GRANT ALL ON $dbname.* TO $dbuser@$mysqlhost IDENTIFIED BY $dbpass;FLUSH PRIVILEGES;"
+		mysql --user=$mysqluser --password=$mysqlpass --execute="$dbsetup"
 		if [ $? != "0" ]; then
 			echo "============================================"
 			echo "[Error]: Database creation failed. Aborting."
